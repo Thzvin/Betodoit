@@ -2,7 +2,6 @@ require("dotenv").config()
 const express = require("express");
 const cors = require("cors")
 const app = express();
-const {cekdata, tambahuser, tambahkegitan, finddata, findke2, deleteTodolist, updateselesai, updatebelumselesai, deleteall} = require("./utils/function")
 const pool = require("./db")
 const bcrypt = require("bcrypt");
 const session = require("express-session");
