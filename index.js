@@ -5,10 +5,7 @@ const app = express();
 const {cekdata, tambahuser, tambahkegitan, finddata, findke2, deleteTodolist, updateselesai, updatebelumselesai, deleteall} = require("./utils/function")
 const pool = require("./db")
 const bcrypt = require("bcrypt");
-
 const session = require("express-session");
-
-
 
 app.use(session({
   secret: process.env.SESSION_SECRET || "dev-secret",
@@ -19,6 +16,11 @@ app.use(session({
     secure: process.env.NODE_ENV === "production", // true jika sudah deploy
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
   }
+}))
+
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+  credentials: true
 }))
 
 
@@ -32,10 +34,6 @@ const isLogin = (req, res, next) => {
   next()
 }
 
-app.use(cors({
-  origin: true,
-  credentials: true
-}))
 
 app.use(express.json());
 
@@ -323,7 +321,9 @@ app.get("/me", async (req, res) => {
 app.get("/", (req, res) => {
   res.send("Backend is running 🚀")
 })
-// port listen
+
+
+
 const PORT = process.env.PORT || 8080
 
 app.listen(PORT, "0.0.0.0", () => {
