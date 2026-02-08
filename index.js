@@ -11,15 +11,15 @@ app.use(session({
   secret: process.env.SESSION_SECRET || "dev-secret",
   resave: false,
   saveUninitialized: false,
-  proxy: true, // Tambahkan ini untuk Railway
+  proxy: true, 
   cookie: {
-    secure: process.env.NODE_ENV === "production", // true jika sudah deploy
+    secure: process.env.NODE_ENV === "production", 
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
   }
 }))
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL,
+  origin: true,
   credentials: true
 }))
 
