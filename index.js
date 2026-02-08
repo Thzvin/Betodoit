@@ -14,9 +14,10 @@ app.use(session({
   secret: process.env.SESSION_SECRET || "dev-secret",
   resave: false,
   saveUninitialized: false,
+  proxy: true, // Tambahkan ini untuk Railway
   cookie: {
-    secure: false,       
-    sameSite: "lax"
+    secure: process.env.NODE_ENV === "production", // true jika sudah deploy
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
   }
 }))
 
@@ -41,33 +42,6 @@ app.use(express.json());
 
 // login post
 app.post("/login", async (req , res) => {
-
-  //   const user = cekdata(req.body)
-
-
-  //    if (!user || user.password !== req.body.password) {
-  //   console.log("username atau password salah")
-
-  //    return res.json({
-  //     success: false,
-  //     message: "password salah"
-  //   })
-    
-  // }else{
-
-    
-  //     req.session.user = {
-  //       username: user.username
-  //     }
-
-
-  //     return res.json({
-  //     success: true,
-  //     islogin :true,
-  //     username: user.username
-  //   })
-  // }
-
 
   const {username , password} = req.body
 
@@ -111,23 +85,7 @@ app.post("/login", async (req , res) => {
 
 // register post
 app.post("/register" , async (req , res) => {
-  // const user = cekdata(req.body)
-
-  // if(user){
-  //    console.log("username telah ada")
-  //    res.json({
-  //     message: "username sudah ada silakan buat nama yang lain",
-  //     hasil :false
-  //    })
-  // }else{
-
-  //    tambahuser(req.body)
-  //     res.json({
-  //       message: "akun berhasil di buat silakan login",
-  //       hasil : true
-  //     })
-  // }
-
+ 
   const {username ,password } = req.body
 
 
@@ -161,20 +119,7 @@ app.post("/register" , async (req , res) => {
 
 //todolist post 
 app.post("/todolist" , isLogin,  async(req , res )=> {
-  
-  // const hasil = tambahkegitan({
-  //   username: req.session.user.username,
-  //   data: req.body.data
-  // })
 
-  // if(hasil){
-  //   res.json({
-  //     message : "berhasil"
-  //   })
-  // }
-
-
-   
   const {title , description} = req.body
   const accountid = req.session.user.id
 
@@ -302,26 +247,6 @@ app.delete("/todolist" , isLogin  , async(req , res) => {
           }
 
    
-   
-
-
-//   if(Array.isArray(body)){
-//   const sortedIndex = body.sort((a, b) => b - a);
-//  deleteall({username  , sortedIndex})
-    
-//   res.json({
-//       success : true,
-//     })
-
-//   }else{
-//     const databaru = Number(body)
-//     deleteTodolist({username , databaru})
-  
-    
-//     res.json({
-//       success : true,
-//     })
-//   }
 
 })
 
@@ -330,38 +255,7 @@ app.patch("/todolist" , isLogin, async (req, res) =>  {
     const aksi = req.body.action
     const body = Number(req.body.index)
     const idaaccount = req.session.user.id
-    // if(req.body.action === "selesai"){
-    //  updateselesai({username, body})
-    //  res.json({
-    //   success : true
-    //  })
-
-
-    // }else{
-    //  updatebelumselesai({username, body})
-
-
-
-    //  res.json({
-    //   success: true
-    //  })
-
-    // }
-
-
-
-    // const find = await pool.query(
-
-    //   "SELECT username FROM account WHERE id = $1",
-    //   [idaaccount]
-
-      
-    // )
-    // if(!find.rows.length === 0){
-    //   return res.status(401).json({
-    //     success : false
-    //   })
-    // }
+   
    try{
 await pool.query(
       "UPDATE todolist SET status = $1 WHERE id = $2 AND account_id = $3 ",
@@ -401,27 +295,6 @@ app.post("/logout" , (req , res) => {
 })
 
 
-
-// app.get("/me", async (req, res) => {
-
-//   const id = req.session.user.id
-
-//   const username = await pool.query(
-//     "SELECT username FROM account WHERE id = $1",
-//     [id]
-//   )
-
-//   if (!username.rows.length === 0) {
-//     return res.status(401).json({
-//       login: false
-//     })
-//   }
-
-//   res.json({
-//     login: true,
-//     username: username
-//   })
-// })
 
 
 
