@@ -1,5 +1,6 @@
 require("dotenv").config()
 const express = require("express");
+const fetch = require("node-fetch");
 const cors = require("cors")
 const app = express();
 const pool = require("./db")
@@ -83,8 +84,25 @@ app.post("/login", async (req , res) => {
 // register post
 app.post("/register" , async (req , res) => {
  
-  const {username ,password } = req.body
+  const {username ,password, token } = req.body
 
+  const secretkey = process.env.SECRET_KEY
+  const verifUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretkey}&response=${token}`;
+
+  const params = new URLSearchParams();
+  params.append("secret", secretkey);
+  params.append("response", token);
+
+const response = await fetch("https://www.google.com/recaptcha/api/siteverify", {
+  method: "POST",
+  headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  body: params
+});
+
+const data = await response.json();
+    if (!data.success) {
+    return res.status(400).json({ success: false, message: "reCAPTCHA gagal" });
+  }
 
   const cek = await pool.query(
     "SELECT username FROM account WHERE username = $1",
