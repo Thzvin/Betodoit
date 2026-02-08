@@ -7,13 +7,4 @@ const pool = new Pool({
     : false
 })
 
-pool.connect()
-  .then(client => {
-    console.log("✅ PostgreSQL terkoneksi")
-    client.release()
-  })
-  .catch(err => {
-    console.error("❌ Gagal konek DB:", err.message)
-  })
-
 module.exports = pool

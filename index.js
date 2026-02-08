@@ -11,11 +11,11 @@ const session = require("express-session");
 
 
 app.use(session({
-  secret: process.env.SESSION_SECRET,
+  secret: process.env.SESSION_SECRET || "dev-secret",
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.NODE_ENV === "production",
+    secure: false,       
     sameSite: "lax"
   }
 }))
@@ -32,9 +32,9 @@ const isLogin = (req, res, next) => {
 }
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL,
+  origin: true,
   credentials: true
-}));
+}))
 
 app.use(express.json());
 
@@ -451,7 +451,8 @@ app.get("/", (req, res) => {
   res.send("Backend is running 🚀")
 })
 // port listen
-const PORT = process.env.PORT || 3000
-app.listen(PORT, () => {
+const PORT = process.env.PORT || 8080
+
+app.listen(PORT, "0.0.0.0", () => {
   console.log("server running on port", PORT)
 })
