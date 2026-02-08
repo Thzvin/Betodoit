@@ -424,6 +424,7 @@ app.post("/logout" , (req , res) => {
 // })
 
 
+
 app.get("/me", async (req, res) => {
   if (!req.session.user) {
     return res.json({ login: false })
@@ -444,6 +445,10 @@ app.get("/me", async (req, res) => {
     login: true,
     username: result.rows[0].username
   })
+})
+
+app.get("/", (req, res) => {
+  res.send("Backend is running 🚀")
 })
 // port listen
 const PORT = process.env.PORT || 3000
